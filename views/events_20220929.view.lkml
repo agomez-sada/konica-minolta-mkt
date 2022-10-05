@@ -270,9 +270,15 @@ view: events_20220929 {
     sql: ${TABLE}.event_server_timestamp_offset ;;
   }
 
-  dimension: event_timestamp {
-    type: number
-    sql: ${TABLE}.event_timestamp ;;
+  # dimension: event_timestamp {
+  #   type: number
+  #   sql: FORMAT_TIMESTAMP('%d/%m/%Y %H:%M', TIMESTAMP_MICROS(${TABLE}.event_timestamp));;
+  # }
+
+  dimension_group: timestamp_test {
+    type: time
+    intervals: [day,month,year,hour,minute]
+    sql:TIMESTAMP_MICROS(${TABLE}.event_timestamp) ;;
   }
 
   dimension: event_value_in_usd {
@@ -385,6 +391,7 @@ view: events_20220929 {
   }
 
   dimension: user_id {
+    primary_key: yes
     type: string
     sql: ${TABLE}.user_id ;;
   }
@@ -416,6 +423,11 @@ view: events_20220929 {
   measure: count {
     type: count
     drill_fields: [detail*]
+  }
+
+  measure: user_count {
+    type: count_distinct
+    sql: ${user_id} ;;
   }
 
   # ----- Sets of fields for drilling ------
@@ -660,4 +672,5 @@ view: events_20220929__user_properties {
     group_label: "Value"
     group_item_label: "String Value"
   }
+
 }
