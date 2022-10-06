@@ -385,6 +385,7 @@ view: events_20220930 {
   }
 
   dimension: user_id {
+    primary_key: yes
     type: string
     sql: ${TABLE}.user_id ;;
   }
@@ -406,6 +407,11 @@ view: events_20220930 {
   dimension: user_properties {
     hidden: yes
     sql: ${TABLE}.user_properties ;;
+  }
+
+  measure: user_count {
+    type: count_distinct
+    sql: ${user_pseudo_id} ;;
   }
 
   dimension: user_pseudo_id {
