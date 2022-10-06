@@ -270,10 +270,10 @@ view: events_20220929 {
     sql: ${TABLE}.event_server_timestamp_offset ;;
   }
 
-  # dimension: event_timestamp {
-  #   type: number
-  #   sql: FORMAT_TIMESTAMP('%d/%m/%Y %H:%M', TIMESTAMP_MICROS(${TABLE}.event_timestamp));;
-  # }
+  dimension: event_timestamp {
+    type: number
+    sql: ${TABLE}.event_timestamp ;;
+  }
 
   dimension_group: timestamp_test {
     type: time
