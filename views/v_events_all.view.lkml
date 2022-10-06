@@ -1,6 +1,6 @@
 # Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
 explore: v_events_all {
-  hidden: yes
+
 
   join: v_events_all__items {
     view_label: "V Events All: Items"
@@ -296,6 +296,12 @@ view: v_events_all {
   dimension: event_timestamp {
     type: number
     sql: ${TABLE}.event_timestamp ;;
+  }
+
+  dimension_group: timestamp_test {
+    type: time
+    intervals: [day,hour,minute,month,week, year]
+    sql: TIMESTAMP_MICROS(${event_timestamp}) ;;
   }
 
   dimension: event_value_in_usd {
