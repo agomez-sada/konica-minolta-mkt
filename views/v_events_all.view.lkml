@@ -1,6 +1,6 @@
 # Un-hide and use this explore, or copy the joins into another explore, to get all the fully nested relationships from this view
 explore: v_events_all {
-
+  label: "Events All"
 
   join: v_events_all__items {
     view_label: "V Events All: Items"
@@ -293,15 +293,15 @@ view: v_events_all {
     sql: ${TABLE}.event_server_timestamp_offset ;;
   }
 
-  dimension: event_timestamp {
-    type: number
-    sql: ${TABLE}.event_timestamp ;;
-  }
+  # dimension: event_timestamp {
+  #   type: number
+  #   sql: ${TABLE}.event_timestamp ;;
+  # }
 
-  dimension_group: timestamp_test {
+  dimension_group: event_timestamp {
     type: time
-    intervals: [day,hour,minute,month,week, year]
-    sql: TIMESTAMP_MICROS(${event_timestamp}) ;;
+    timeframes: [time,date,hour,minute,month,month_name,week, day_of_week,year]
+    sql: TIMESTAMP_MICROS(${TABLE}.event_timestamp) ;;
   }
 
   dimension: event_value_in_usd {
@@ -408,9 +408,15 @@ view: v_events_all {
     group_item_label: "Source"
   }
 
-  dimension: user_first_touch_timestamp {
-    type: number
-    sql: ${TABLE}.user_first_touch_timestamp ;;
+  # dimension: user_first_touch_timestamp {
+  #   type: number
+  #   sql: ${TABLE}.user_first_touch_timestamp ;;
+  # }
+
+  dimension_group: user_first_touch_timestamp {
+    type: time
+    timeframes: [time,date,hour,minute,month,month_name,week, day_of_week,year]
+    sql: TIMESTAMP_MICROS(${TABLE}.user_first_touch_timestamp) ;;
   }
 
   dimension: user_id {
@@ -440,6 +446,17 @@ view: v_events_all {
   dimension: user_pseudo_id {
     type: string
     sql: ${TABLE}.user_pseudo_id ;;
+  }
+
+  measure: user_count {
+    type: count_distinct
+    sql: ${user_pseudo_id};;
+  }
+
+  measure: new_user_count {
+    type: count_distinct
+    sql: ${user_pseudo_id} ;;
+    filters: [event_name: "first_visit"]
   }
 
   measure: count {
